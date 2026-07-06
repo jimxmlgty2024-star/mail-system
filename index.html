@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>邮箱管理系统</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css">
+
+</head>
+
+<body>
+
+  <div class="container">
+  
+  <!-- ================= Login ================= -->
+
+<div
+  id="loginPage"
+  class="page">
+
+  <h2>邮箱管理系统</h2>
+
+  <input
+
+    id="username"
+
+    placeholder="用户名"
+
+    autocomplete="off">
+
+  <input
+
+    id="password"
+
+    type="password"
+
+    placeholder="密码"
+
+    autocomplete="new-password"
+
+    onkeydown="if(event.key==='Enter') login()">
+
+  <button
+
+    id="loginBtn"
+
+    onclick="login()">
+
+    登录
+
+  </button>
+
+  <div id="loginMessage"></div>
+
+</div>
+
+<!-- ================= Dashboard ================= -->
+
+<div
+  id="dashboardPage"
+  class="page hidden">
+
+  <h2>首页</h2>
+
+  <div id="welcomeText"></div>
+
+  <!-- 常用功能 -->
+
+  <div class="button-group">
+
+    <button onclick="showAssignPage()">
+      领取邮箱
+    </button>
+
+    <button onclick="showUploadPage()">
+      上传邮箱
+    </button>
+
+    <button onclick="showSearchPage()">
+      查询邮箱
+    </button>
+
+    <button onclick="showStatsPage()">
+      库存统计
+    </button>
+
+  </div>
+
+  <!-- 管理员功能 -->
+
+  <div
+    id="adminButtons"
+    class="hidden">
+
+    <hr>
+
+    <h3>管理员功能</h3>
+
+    <div class="button-group">
+
+      <button onclick="showUserPage()">
+        用户管理
+      </button>
+
+    </div>
+
+  </div>
+
+  <hr>
+
+  <button
+    id="logoutBtn"
+    class="danger"
+    onclick="logout()">
+
+    退出登录
+
+  </button>
+
+</div>
+
+<!-- ================= Assign ================= -->
+
+<div
+  id="assignPage"
+  class="page hidden">
+
+  <h2>领取邮箱</h2>
+
+  <input
+    id="assignName"
+    placeholder="领取人">
+
+  <input
+    id="assignPerson"
+    placeholder="使用人">
+
+  <div class="button-group">
+
+    <button
+      id="assignBtn"
+      onclick="assignEmail()">
+      领取
+    </button>
+
+    <button
+      onclick="showDashboard()">
+      返回首页
+    </button>
+
+  </div>
+
+  <div
+  id="assignResult"
+  class="result-container">
+  </div>
+
+</div>
+
+<!-- ================= Upload ================= -->
+
+<div
+  id="uploadPage"
+  class="page hidden">
+
+  <h2>上传邮箱</h2>
+
+  <input
+    id="uploadAccount"
+    placeholder="邮箱账号 *">
+
+  <input
+    id="uploadPassword"
+    type="text"
+    placeholder="邮箱密码 *">
+
+  <input
+    id="uploadOtp"
+    placeholder="OTP Secret">
+
+  <input
+    id="uploadRecovery"
+    placeholder="辅助邮箱">
+
+  <input
+    id="uploadRemark"
+    placeholder="备注">
+
+  <div class="button-group">
+
+    <button
+      id="uploadBtn"
+      onclick="uploadEmail()">
+      提交
+    </button>
+
+    <button
+      onclick="clearUploadForm()">
+      清空
+    </button>
+
+    <button
+      onclick="showDashboard()">
+      返回首页
+    </button>
+
+  </div>
+
+  <div id="uploadMessage"></div>
+
+  <hr>
+
+  <div
+  id="uploadResult"
+  class="result-container">
+  </div>
+
+</div>
+
+<!-- ================= Search ================= -->
+
+<div
+  id="searchPage"
+  class="page hidden">
+
+  <h2>查询邮箱</h2>
+
+  <input
+    id="searchKeyword"
+    placeholder="管理员：支持模糊查询；普通用户：请输入完整邮箱账号并以 @ 结尾（如 apple@）">
+
+  <div class="button-group">
+
+    <button
+      id="searchBtn"
+      onclick="searchEmail()">
+      查询
+    </button>
+
+    <button
+      onclick="showDashboard()">
+      返回首页
+    </button>
+
+  </div>
+
+  <div
+  id="searchResult"
+  class="result-container">
+  </div>
+
+  <button
+
+    id="recycleBtn"
+
+    class="danger hidden"
+
+    onclick="recycleCurrentEmail()">
+
+    回收此邮箱
+
+  </button>
+
+</div>
+
+<!-- ================= Statistics ================= -->
+
+<div
+  id="statsPage"
+  class="page hidden">
+
+  <h2>库存统计</h2>
+
+  <div class="button-group">
+
+    <button
+      id="statsBtn"
+      onclick="loadStats()">
+      刷新
+    </button>
+
+    <button
+      onclick="showDashboard()">
+      返回首页
+    </button>
+
+  </div>
+
+  <div id="statsResult"></div>
+
+</div>
+
+<!-- ================= User ================= -->
+
+<div
+  id="userPage"
+  class="page hidden">
+
+  <h2>创建用户</h2>
+
+  <input
+    id="newUsername"
+    placeholder="用户名">
+
+  <input
+    id="newPassword"
+    type="password"
+    placeholder="密码">
+
+  <select id="newRole">
+
+    <option value="user">
+      user
+    </option>
+
+    <option value="admin">
+      admin
+    </option>
+
+  </select>
+
+  <div class="button-group">
+
+    <button
+      id="createUserBtn"
+      onclick="createUser()">
+      创建
+    </button>
+
+    <button
+      onclick="showDashboard()">
+      返回首页
+    </button>
+
+  </div>
+
+  <div id="createUserMessage"></div>
+
+</div>
+ 
+ <!-- Toast Container -->
+
+  <div id="toastContainer"></div>
+
+  <!-- App -->
+
+  <script src="app.js"></script>
+
+</body>
+
+</html>
