@@ -1,0 +1,81 @@
+const GAS_URL = "google web URL";
+
+export default {
+  async fetch(request, env) {
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        headers: cors()
+      });
+    }
+
+    let body;
+
+    try {
+
+      body = await request.json();
+
+    } catch (e) {
+
+      return json({
+        success: false,
+        message: "请求数据格式错误"
+      }, 400);
+
+    }
+
+    // 自动加入 API Key（从 Secret 获取）
+    body.apiKey = env.API_KEY;
+
+    let res;
+
+    try {
+
+      res = await fetch(GAS_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
+
+    } catch (e) {
+
+      return json({
+        success: false,
+        message: "服务器连接失败"
+      }, 502);
+
+    }
+
+    return new Response(await res.text(), {
+      status: res.status,
+      headers: {
+        ...cors(),
+        "Content-Type": "application/json"
+      }
+    });
+
+  }
+};
+
+function cors() {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "*",
+    "Access-Control-Allow-Methods": "GET,POST,OPTIONS"
+  };
+}
+
+function json(obj, status = 200) {
+  return new Response(
+    JSON.stringify(obj),
+    {
+      status,
+      headers: {
+        ...cors(),
+        "Content-Type": "application/json"
+      }
+    }
+  );
+}
